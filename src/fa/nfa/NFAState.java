@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 public class NFAState extends State {
 
-    private HashMap<Character, State> transitions;
+    protected HashMap<Character, State> transitions;
     
     NFAState(String stateName) {
         super(stateName);

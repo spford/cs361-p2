@@ -12,6 +12,7 @@ public class NFA implements NFAInterface {
 
     public NFA() {
         this.sigma = new LinkedHashSet<>();
+        sigma.add('e');
         this.states = new HashMap<>();
         this.finalStates = new TreeSet();
         this.startState = null;
@@ -34,11 +35,17 @@ public class NFA implements NFAInterface {
 
     @Override
     public boolean addTransition(String fromState, Set<String> toStates, char onSymb) {
-        if( states.containsKey(fromState) ) {
-            NFAState toTransition = states.get(fromState);
-            for( String toTransition : toStates ) {
+        if( states.containsKey(fromState) && sigma.contains(onSymb) ) {
+            NFAState fromThisState = states.get(fromState);
+            for(String from : toStates) {
+                if(states.containsKey(from)) {
+                    fromThisState.transitions.putIfAbsent(onSymb, states.get(from));
+                }
+                else { return false;}
             }
+            return true;
         }
+        return false;
     }
 
     @Override
