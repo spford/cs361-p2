@@ -1,15 +1,20 @@
 package fa.nfa;
 
 import fa.State;
-
-import java.util.Set;
+import java.util.*;
 
 public class NFA implements NFAInterface {
 
+    private LinkedHashSet<Character> sigma;
+    private HashMap<String, NFAState> states;
+    private TreeSet<String> finalStates;
+    private String startState;
 
-
-    public NFA(String name) {
-
+    public NFA() {
+        this.sigma = new LinkedHashSet<>();
+        this.states = new HashMap<>();
+        this.finalStates = new TreeSet();
+        this.startState = null;
     }
 
     @Override
@@ -29,7 +34,11 @@ public class NFA implements NFAInterface {
 
     @Override
     public boolean addTransition(String fromState, Set<String> toStates, char onSymb) {
-        return false;
+        if( states.containsKey(fromState) ) {
+            NFAState toTransition = states.get(fromState);
+            for( String toTransition : toStates ) {
+            }
+        }
     }
 
     @Override
@@ -39,22 +48,37 @@ public class NFA implements NFAInterface {
 
     @Override
     public boolean addState(String name) {
+        if ( !states.containsKey(name) ) {
+            NFAState newState = new NFAState(name);
+            states.put(name, newState);
+            return true;
+        }
         return false;
     }
 
     @Override
     public boolean setFinal(String name) {
+        if( states.containsKey(name) ) {
+            finalStates.add(name);
+            return true;
+        }
         return false;
     }
 
     @Override
     public boolean setStart(String name) {
+        if( states.containsKey(name) ) {
+            startState = name;
+            return true;
+        }
         return false;
     }
 
     @Override
     public void addSigma(char symbol) {
-
+        if( !sigma.contains(symbol) ) {
+            sigma.add(symbol);
+        }
     }
 
     @Override
@@ -64,21 +88,24 @@ public class NFA implements NFAInterface {
 
     @Override
     public Set<Character> getSigma() {
-        return Set.of();
+        return sigma;
     }
 
     @Override
-    public State getState(String name) {
+    public NFAState getState(String name) {
+        if (states.containsKey(name)) {
+            return states.get(name);
+        }
         return null;
     }
 
     @Override
     public boolean isFinal(String name) {
-        return false;
+        return finalStates.contains(name);
     }
 
     @Override
     public boolean isStart(String name) {
-        return false;
+        return startState.contentEquals(name);
     }
 }
