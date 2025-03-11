@@ -25,7 +25,17 @@ public class NFA implements NFAInterface {
 
     @Override
     public Set<NFAState> eClosure(NFAState s) {
-        return Set.of();
+        Set<NFAState> closure = new HashSet<>();
+        if (states.containsKey(s.getName())) {
+            for (Character c : s.transitions.keySet()) {
+                if (c.equals('e')) {
+                    NFAState nfaState = states.get(s.transitions.get(c).toString());
+                    closure.add(nfaState);
+                }
+            }
+            closure.add(s);
+        }
+        return closure;
     }
 
     @Override
