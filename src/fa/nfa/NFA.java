@@ -1,6 +1,5 @@
 package fa.nfa;
 
-import fa.State;
 import java.util.*;
 
 public class NFA implements NFAInterface {
@@ -12,9 +11,9 @@ public class NFA implements NFAInterface {
 
     public NFA() {
         this.sigma = new LinkedHashSet<>();
-        sigma.add('e');
+        sigma.add('e'); //Fill with epsilon(e) for NFA purposes
         this.states = new HashMap<>();
-        this.finalStates = new TreeSet();
+        this.finalStates = new TreeSet<>();
         this.startState = null;
     }
 
@@ -40,7 +39,19 @@ public class NFA implements NFAInterface {
 
     @Override
     public int maxCopies(String s) {
-        return 0;
+        int copies = 0;
+        NFAState currentState = states.get(startState);
+        Stack<NFAState> stack = new Stack<>();
+        for (Character c : s.toCharArray()) {
+            if (sigma.contains(c)) {
+                for (Character c2 : currentState.transitions.keySet()) {
+                    if (c.equals(c2) || c2.equals('e')) {
+                        stack.push(currentState.transitions.get(c2));
+                    }
+                }
+            }
+        }
+        return stack.size();
     }
 
     @Override
@@ -100,6 +111,21 @@ public class NFA implements NFAInterface {
 
     @Override
     public boolean accepts(String s) {
+        NFAState currentState = states.get(startState);
+        Stack<NFAState> stack = new Stack<>();
+        for (Character c : s.toCharArray()) {
+            if (!sigma.contains(c)) { return false; }
+                for(Character c2 : currentState.transitions.keySet()) {
+                    if (c.equals(c2) || c2.equals('e')) {
+                        stack.push(currentState.transitions.get(c2));
+                    }
+                }
+        }
+        for (NFAState nfaState : stack) {
+            if (finalStates.contains(nfaState.getName())) {
+                return true;
+            }
+        }
         return false;
     }
 
