@@ -29,7 +29,9 @@ public class NFA implements NFAInterface {
             NFAState state = states.get(s.getName());
             for (Character c : state.transitions.keySet()) {
                 if (c.equals('e')) {
-                    closure.add(state);
+                    for(NFAState toState: state.transitions.get(c)) {
+                        closure.add(toState);
+                    }
                 }
             }
         }
@@ -116,10 +118,7 @@ public class NFA implements NFAInterface {
             if (!sigma.contains(c)) { return false; }
             for (Character c2 : currentState.transitions.keySet()) {
                 if (c.equals(c2) || c2.equals('e')) {
-                    List transitionList = (List) currentState.transitions.get(c2);
-                    for ( int i = 0; i < transitionList.size(); i++ ) {
-                        stack.add((NFAState) transitionList.get(i));
-                    }
+
                 }
             }
         }
