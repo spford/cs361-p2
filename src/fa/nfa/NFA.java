@@ -25,33 +25,43 @@ public class NFA implements NFAInterface {
     @Override
     public Set<NFAState> eClosure(NFAState s) {
         Set<NFAState> closure = new HashSet<>();
+
+
         if (states.containsKey(s.getName())) {
             NFAState state = states.get(s.getName());
             for (Character c : state.transitions.keySet()) {
                 if (c.equals('e')) {
-                    for(NFAState toState: state.transitions.get(c)) {
-                        closure.add(toState);
-                    }
+                    closure.addAll(state.transitions.get(c));
                 }
             }
+            closure.add(s);
         }
         return closure;
     }
 
     @Override
     public int maxCopies(String s) {
-        int copies = 0;
-        NFAState currentState = states.get(startState);
-        for (Character c : s.toCharArray()) {
-            if (sigma.contains(c)) {
-                for (Character c2 : currentState.transitions.keySet()) {
-                    if (c.equals(c2) || c2.equals('e')) {
-                        copies++;
-                    }
+        Set<NFAState> currentStates = eClosure(states.get(startState));
+        int maxCopies = currentStates.size();
+
+        for ( Character c : s.toCharArray() ) {
+            if (!sigma.contains(c)) {
+                continue;
+            }
+
+            Set<NFAState> nextStates = new HashSet<>();
+            for (NFAState state : currentStates) {
+                if (state.transitions.containsKey(c)) {
+                    nextStates.addAll(state.transitions.get(c));
                 }
             }
+
+            for (NFAState nextState : nextStates) {
+                currentStates.addAll(eClosure(nextState));
+            }
+            maxCopies = Math.max(maxCopies, currentStates.size());
         }
-        return copies;
+        return maxCopies;
     }
 
     @Override
@@ -78,7 +88,6 @@ public class NFA implements NFAInterface {
     public boolean addState(String name) {
         if ( !states.containsKey(name) ) {
             NFAState newState = new NFAState(name);
-            newState.transition('e', newState);
             states.put(name, newState);
             return true;
         }
@@ -112,18 +121,27 @@ public class NFA implements NFAInterface {
 
     @Override
     public boolean accepts(String s) {
-        NFAState currentState = states.get(startState);
-        Stack<NFAState> stack = new Stack<>();
-        for (Character c : s.toCharArray()) {
-            if (!sigma.contains(c)) { return false; }
-            for (Character c2 : currentState.transitions.keySet()) {
-                if (c.equals(c2) || c2.equals('e')) {
+        Set<NFAState> currentStates = eClosure(states.get(startState));
 
+        for (Character c : s.toCharArray()) {
+            if ( !sigma.contains(c) ) {
+                return false;
+            }
+
+            Set<NFAState> nextStates = new HashSet<>();
+            for (NFAState state : currentStates) {
+                if (state.transitions.containsKey(c)) {
+                    nextStates.addAll(state.transitions.get(c));
                 }
             }
+
+            for (NFAState nextState : nextStates) {
+                currentStates.addAll(eClosure(nextState));
+            }
         }
-        for (NFAState nfaState : stack) {
-            if (finalStates.contains(nfaState.getName())) {
+
+        for (NFAState state : currentStates) {
+            if (finalStates.contains(state.getName())) {
                 return true;
             }
         }
