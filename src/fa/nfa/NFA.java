@@ -62,6 +62,7 @@ public class NFA implements NFAInterface {
                 }
             }
 
+            currentStates.clear();
             for (NFAState nextState : nextStates) {
                 currentStates.addAll(eClosure(nextState));
             }
@@ -141,6 +142,7 @@ public class NFA implements NFAInterface {
                 }
             }
 
+            currentStates.clear();
             for (NFAState nextState : nextStates) {
                 currentStates.addAll(eClosure(nextState));
             }
@@ -177,3 +179,4 @@ public class NFA implements NFAInterface {
         return startState.contentEquals(name);
     }
 }
+
