@@ -11,7 +11,6 @@ public class NFA implements NFAInterface {
 
     public NFA() {
         this.sigma = new LinkedHashSet<>();
-        sigma.add('e'); //Fill with epsilon(e) for NFA purposes
         this.states = new HashMap<>();
         this.finalStates = new TreeSet<>();
         this.startState = null;
@@ -73,7 +72,7 @@ public class NFA implements NFAInterface {
 
     @Override
     public boolean addTransition(String fromState, Set<String> toStates, char onSymb) {
-        if( states.containsKey(fromState) && sigma.contains(onSymb) ) {
+        if( states.containsKey(fromState) && (sigma.contains(onSymb) || onSymb == 'e')) {
             NFAState fromThisState = states.get(fromState);
             for(String from : toStates) {
                 if(states.containsKey(from)) {
@@ -88,7 +87,25 @@ public class NFA implements NFAInterface {
 
     @Override
     public boolean isDFA() {
-        return false;
+
+        for (NFAState state : states.values()) {
+            Set<NFAState> totalStates = new HashSet<>();
+            totalStates.addAll(state.transitions.get('e'));
+            if (totalStates.size() > 1) {
+                return false;
+            }
+
+            for (Character c : sigma) {
+                totalStates.clear();
+                if (state.transitions.containsKey(c)) {
+                    totalStates.addAll(state.transitions.get(c));
+                }
+                if (totalStates.size() > 1) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     @Override
@@ -96,6 +113,7 @@ public class NFA implements NFAInterface {
         if ( !states.containsKey(name) ) {
             NFAState newState = new NFAState(name);
             states.put(name, newState);
+            addTransition(name, Set.of(name), 'e');
             return true;
         }
         return false;
@@ -121,7 +139,7 @@ public class NFA implements NFAInterface {
 
     @Override
     public void addSigma(char symbol) {
-        if( !sigma.contains(symbol) ) {
+        if(!sigma.contains(symbol) && symbol != 'e') {
             sigma.add(symbol);
         }
     }
@@ -131,7 +149,7 @@ public class NFA implements NFAInterface {
         Set<NFAState> currentStates = eClosure(states.get(startState));
 
         for (Character c : s.toCharArray()) {
-            if ( !sigma.contains(c) ) {
+            if (!sigma.contains(c) && c != 'e') {
                 return false;
             }
 
