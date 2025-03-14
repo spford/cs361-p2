@@ -18,7 +18,12 @@ valid transitions from a specified state. The rest of the program had similar me
 algorithm was copied and adjusted to properly implement the NFAInterface<br />
 Spencer Ford
 
-//ACOSTABSU
+I am thankful the program to this project was similar to that of the last project as by the time
+my bandwidth allowed for me to contribute, Ford made tremendous headway on the solution of this project
+which I hope wasn't too bad given the similarity. Perhaps in a twist of good fortune, I was able to review
+Ford's near perfect implementation with fresh eyes and give the final missing pieces to advance our work to
+the next tier of being a more robust solution which was mostly surrounding the delicate process of
+correctly implementing the epsilon transition.
 
 ## Compiling and Using
 
