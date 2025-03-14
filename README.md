@@ -23,7 +23,7 @@ my bandwidth allowed for me to contribute, Ford made tremendous headway on the s
 which I hope wasn't too bad given the similarity. Perhaps in a twist of good fortune, I was able to review
 Ford's near perfect implementation with fresh eyes and give the final missing pieces to advance our work to
 the next tier of being a more robust solution which was mostly surrounding the delicate process of
-correctly implementing the epsilon transition.
+correctly implementing the epsilon transition.<br />
 Luis Acosta
 
 ## Compiling and Using
