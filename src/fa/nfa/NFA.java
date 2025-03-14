@@ -94,7 +94,7 @@ public class NFA implements NFAInterface {
 
     /** Returns boolean value if specified transition is valid
      * This method will check to make sure fromState, toState are states already in the NFA and the character
-     * is in the language. Then it will add the transition to the fromState transition set.
+     * is in the language OR 'e'. Then it will add the transition to the fromState transition set.
      * @param fromState - state transiton is associated with
      *          toState - state transition is going to
      *           onSymb - character in the language the transition occurs on
@@ -117,9 +117,8 @@ public class NFA implements NFAInterface {
     }
 
     /** Returns boolean value if this object is a DFA
-     * This method will look through every states' transition table looking for epsilon
-     * transitions and if a specific state has more than one transition on a single
-     * character.
+     * This method will look through every states' transition table looking for
+     * if a specific state has more than one transition on a single character.
      * @return boolean - true - this object is a DFA
      *                  false - this object is an NFA
      */
@@ -146,7 +145,9 @@ public class NFA implements NFAInterface {
         return true;
     }
 
-    /** Adds States to a NFA Instance
+    /** Adds States to a NFA Instance along with automatically adding
+     * each new instance to contain a transition on itself on input
+     * epsilon (reserve char 'e')
      * @param name - the requested name of the state to be added.
      * @return boolean - true - state does not already exist and was successfully added
      *                 - false - state was not added. Probably do to the state of 'name' already exists.
@@ -190,7 +191,8 @@ public class NFA implements NFAInterface {
         return false;
     }
 
-    /** Add a Character to the language
+    /** Add a Character to the language as long as the character
+     * doesn't equal 'e', the reserved symbol for epsilon
      * @param symbol - Character to be added to the language
      **/
     @Override
