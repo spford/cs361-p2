@@ -24,6 +24,7 @@ which I hope wasn't too bad given the similarity. Perhaps in a twist of good for
 Ford's near perfect implementation with fresh eyes and give the final missing pieces to advance our work to
 the next tier of being a more robust solution which was mostly surrounding the delicate process of
 correctly implementing the epsilon transition.
+Luis Acosta
 
 ## Compiling and Using
 
