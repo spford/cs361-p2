@@ -28,6 +28,8 @@ Luis Acosta
 
 ## Compiling and Using
 
+In the "src" directory, run the following
+
 `javac -cp .:/usr/share/java/junit.jar ./test.nfa/NFATest.java`<br />
 `java -cp .:/usr/share/java/junit.jar:/usr/share/java/hamcrest/core.jar org.junit.runner.JUnitCore test.nfa.NFATest`
 
